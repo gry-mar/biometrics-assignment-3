@@ -5,3 +5,10 @@ numpy==1.24.4
 ftfy
 regex
 matplotlib
+albumentations
+opencv-python
+seaborn
+pandas
+iglovikov_helper_functions > /dev/null
+datasouls_antispoof  > /dev/null
+deepface
