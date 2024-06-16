@@ -12,3 +12,8 @@ pandas
 iglovikov_helper_functions > /dev/null
 datasouls_antispoof  > /dev/null
 deepface
+dlib>=19.24.4
+ipykernel==6.29.4
+imutils==0.5.4
+tqdm==4.66.4
+
