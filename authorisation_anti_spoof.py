@@ -17,36 +17,40 @@ import re
 
 import streamlit as st
 
-model = flip_it()
-model_path = "pretrained_models/casia_flip_mcl.pth.tar"
-checkpoint = torch.load(model_path, map_location="cpu")
-model.load_state_dict(checkpoint["state_dict"], strict=False)
-model.eval()
+# model = flip_it()
+# model_path = "pretrained_models/casia_flip_mcl.pth.tar"
+# checkpoint = torch.load(model_path, map_location="cpu")
+# model.load_state_dict(checkpoint["state_dict"], strict=False)
+# model.eval()
 
-preprocess = transforms.Compose(
-[
-transforms.Resize([224, 224]),
-transforms.ToTensor(),
-transforms.Normalize(mean=[0.485], std=[0.229])
-]
-)
+# preprocess = transforms.Compose(
+# [
+# transforms.Resize([224, 224]),
+# transforms.ToTensor(),
+# transforms.Normalize(mean=[0.485], std=[0.229])
+# ]
+# )
 
 def authorise_user(image_path):
     print('\n-------------- Authorisation --------------\n')
 
     # anti spoof
-    img = Image.open(image_path)
+    # img = Image.open(image_path)
 
-    input = preprocess(img).unsqueeze(0)
-    cls_out, feature = model(input, norm_flag=True)
-    prob = F.softmax(cls_out, dim=1).cpu().data.numpy()
+    # input = preprocess(img).unsqueeze(0)
+    # cls_out, feature = model(input, norm_flag=True)
+    # prob = F.softmax(cls_out, dim=1).cpu().data.numpy()
 
-    spoof_result = ((prob[:, 1])>= 0.5).astype(int)[0]
+    # spoof_result = ((prob[:, 1])>= 0.5).astype(int)[0]
+    face_objs = DeepFace.extract_faces(
+    img_path=image_path,
+    anti_spoofing = True
+    )
 
-    if spoof_result==0:
+    if not all(face_obj["is_real"] is True for face_obj in face_objs):
         return 'Authorisation DENIED, spoof detected'
-    
-    elif spoof_result==1:
+
+    else:
         result = DeepFace.find(image_path, db_path='./database')
 
         distance = result[0]['distance'][0]
